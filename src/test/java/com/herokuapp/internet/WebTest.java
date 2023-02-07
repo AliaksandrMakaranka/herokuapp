@@ -116,11 +116,16 @@ public class WebTest {
         open(mainPage);
         click("//a[@href=\"/challenging_dom\"]");
 
-        //id="0a9afc70-895c-013b-88af-1a391d611df0"
-        //14ed12b0-895c-013b-88c3-1a391d611df0
+        click("//a[@class=\"button\"]");
 
-//        click();
-//        Assertions.assertEquals();
+        click("//a[@class=\"button alert\"]");
+
+        click("//a[@class=\"button success\"]");
+    }
+
+    @Test
+    public void checkBoxesTest(){
+
     }
 
     private void open(String http) {
