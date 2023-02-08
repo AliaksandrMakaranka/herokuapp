@@ -1,5 +1,6 @@
 package com.herokuapp.internet;
 
+import com.herokuapp.internet.DragDropEnum;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.*;
@@ -16,8 +17,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.time.Duration;
 import java.util.List;
-
-import static org.bouncycastle.crypto.tls.ContentType.alert;
 
 
 public class WebTest {
@@ -176,7 +175,7 @@ public class WebTest {
     }
 
     @Test
-    public void digestAuthentication() throws InterruptedException {
+    public void digestAuthenticationTest() {
         ((HasAuthentication) driver).register(UsernameAndPassword.of(USERNAME, PASSWORD));
         driver.get("https://the-internet.herokuapp.com/digest_auth");
 
@@ -186,6 +185,17 @@ public class WebTest {
         String expectedResult = "Congratulations! You must have the proper credentials.";
 
         Assertions.assertEquals(expectedResult, actualResult);
+    }
+    @Test
+    public void dragAndDropTest()  {
+        open("http://www.dhtmlgoodies.com/scripts/drag-drop-custom/demo-drag-drop-3.html");
+
+    }
+
+
+
+    private void dragToDropFromEnum(WebElement from, WebElement to){
+        actions.dragAndDrop(from, to).pause(Duration.ofSeconds(1)).build().perform();
     }
 
     private void open(String http) {
