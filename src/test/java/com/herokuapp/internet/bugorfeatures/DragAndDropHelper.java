@@ -1,11 +1,10 @@
-package com.herokuapp.internet;
+package com.herokuapp.internet.bugorfeatures;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 
-import static com.herokuapp.internet.World.*;
+import static com.herokuapp.internet.bugorfeatures.World.*;
 
 public class DragAndDropHelper {
     private WebDriver driver;

@@ -16,8 +16,7 @@ import java.net.URL;
 import java.time.Duration;
 import java.util.List;
 
-import static com.herokuapp.internet.World.OSLO;
-import static com.herokuapp.internet.World.STOCKHOLM;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
 public class WebTest {
@@ -54,7 +53,7 @@ public class WebTest {
         String actualTitle = driver.getTitle();
         String expectedTitle = "The Internet";
 
-        Assertions.assertEquals(actualTitle, expectedTitle);
+        assertEquals(actualTitle, expectedTitle);
 
         List<WebElement> allLinks = driver.findElements(By.tagName("a"));
 //            int i = 0;
@@ -150,7 +149,7 @@ public class WebTest {
 
         if (isSelectedFirstBox == false) {
             click(checkbox1);
-            Assertions.assertEquals("true", checkFirstBoxElement.getAttribute("checked"));
+            assertEquals("true", checkFirstBoxElement.getAttribute("checked"));
         }
 
         if (isSelectedSecondBox == true) {
@@ -185,11 +184,26 @@ public class WebTest {
                         .getText());
         String expectedResult = "Congratulations! You must have the proper credentials.";
 
-        Assertions.assertEquals(expectedResult, actualResult);
+        assertEquals(expectedResult, actualResult);
     }
     @Test
     public void dragAndDropTest()  {
         open("http://www.dhtmlgoodies.com/scripts/drag-drop-custom/demo-drag-drop-3.html");
+
+        WebElement from = driver.findElement(By.xpath("//div[@id=\"box1\"]"));
+        WebElement to = driver.findElement(By.xpath("//div[@id=\"box101\"]"));
+
+        actions.clickAndHold(from)
+                .moveToElement(to)
+                .release()
+                .build()
+                .perform();
+
+        String expectedResult = "rgba(0, 255, 0, 1)";//why we add a and 1???
+        String actualResult = driver.findElement(By.xpath("(//div[@id=\"countries\"])//div[@class=\"dragableBox\" and @id=\"box1\"]"))
+                .getCssValue("background-color");
+
+        assertEquals(expectedResult, actualResult);
     }
 
 

@@ -1,2 +1,4 @@
 # herokuapp
-set up
+https://the-internet.herokuapp.com/
+
+autotests using jUnit-5 and selenium

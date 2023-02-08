@@ -1,4 +1,4 @@
-package com.herokuapp.internet;
+package com.herokuapp.internet.bugorfeatures;
 
 public enum World {
     COPENHAGEN,
