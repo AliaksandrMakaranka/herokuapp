@@ -21,6 +21,8 @@ import static org.bouncycastle.crypto.tls.ContentType.alert;
 
 
 public class WebTest {
+    private static final String USERNAME = "admin";
+    private static final String PASSWORD = "admin";
     private static final String mainPage = "https://the-internet.herokuapp.com/";
     private final static int WAIT_FOR_ELEMENT_TIMEOUT = 5;
     private WebDriver driver;
@@ -80,10 +82,7 @@ public class WebTest {
 
     @Test
     public void checkSignInWithLoginAndPassTest() {
-        String username = "admin";
-        String password = "admin";
-
-        String URL = "https://" + username + ":" + password + "@" + "the-internet.herokuapp.com/basic_auth";
+        String URL = "https://" + USERNAME + ":" + PASSWORD + "@" + "the-internet.herokuapp.com/basic_auth";
         open(URL);
         String actualResult = "Congratulations! You must have the proper credentials.";
         //assert
@@ -172,16 +171,21 @@ public class WebTest {
                 .contextClick(hotSpot)
                 .build()
                 .perform();
+
         driver.switchTo().alert().accept();
     }
 
     @Test
     public void digestAuthentication() throws InterruptedException {
-        open(mainPage);
-        click("//a[@href=\"/digest_auth\"]");
+        ((HasAuthentication) driver).register(UsernameAndPassword.of(USERNAME, PASSWORD));
+        driver.get("https://the-internet.herokuapp.com/digest_auth");
 
-        String username = "admin";
-        String password = "admin";
+        String actualResult = String
+                .valueOf(driver.findElement(By.xpath("//p[contains(text(), \"Congratulations!\")]"))
+                        .getText());
+        String expectedResult = "Congratulations! You must have the proper credentials.";
+
+        Assertions.assertEquals(expectedResult, actualResult);
     }
 
     private void open(String http) {
