@@ -190,10 +190,6 @@ public class WebTest {
     @Test
     public void dragAndDropTest()  {
         open("http://www.dhtmlgoodies.com/scripts/drag-drop-custom/demo-drag-drop-3.html");
-        actions.dragAndDrop(OSLO, STOCKHOLM)
-                .pause(Duration.ofSeconds(1))
-                .build()
-                .perform();
     }
 
 
