@@ -1,7 +1,5 @@
 package com.herokuapp.internet;
 
-import com.herokuapp.internet.DragDropEnum;
-
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.*;
@@ -17,6 +15,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.time.Duration;
 import java.util.List;
+
+import static com.herokuapp.internet.World.OSLO;
+import static com.herokuapp.internet.World.STOCKHOLM;
 
 
 public class WebTest {
@@ -189,14 +190,14 @@ public class WebTest {
     @Test
     public void dragAndDropTest()  {
         open("http://www.dhtmlgoodies.com/scripts/drag-drop-custom/demo-drag-drop-3.html");
-
+        actions.dragAndDrop(OSLO, STOCKHOLM)
+                .pause(Duration.ofSeconds(1))
+                .build()
+                .perform();
     }
 
 
 
-    private void dragToDropFromEnum(WebElement from, WebElement to){
-        actions.dragAndDrop(from, to).pause(Duration.ofSeconds(1)).build().perform();
-    }
 
     private void open(String http) {
         driver.get(http);
