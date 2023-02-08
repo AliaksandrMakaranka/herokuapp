@@ -1,11 +1,11 @@
 package com.herokuapp.internet;
 
 
-
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
@@ -17,6 +17,8 @@ import java.net.URL;
 import java.time.Duration;
 import java.util.List;
 
+import static org.bouncycastle.crypto.tls.ContentType.alert;
+
 
 public class WebTest {
     private static final String mainPage = "https://the-internet.herokuapp.com/";
@@ -24,6 +26,7 @@ public class WebTest {
     private WebDriver driver;
     private WebDriverWait webDriverWait;
     private Logger LOG;
+    private Actions actions;
 
     @BeforeAll
     public static void setUpClass() {
@@ -37,6 +40,7 @@ public class WebTest {
         webDriverWait = new WebDriverWait(driver, Duration.ofSeconds(WAIT_FOR_ELEMENT_TIMEOUT));
         LOG = LoggerFactory.getLogger(WebTest.class);
         driver.manage().window().maximize();
+        actions = new Actions(driver);
     }
 
 
@@ -44,12 +48,18 @@ public class WebTest {
     @DisplayName("OpenHomeAndShowNamesLinks")
     public void mainPage() {
         open(mainPage);
+
+        String actualTitle = driver.getTitle();
+        String expectedTitle = "The Internet";
+
+        Assertions.assertEquals(actualTitle, expectedTitle);
+
         List<WebElement> allLinks = driver.findElements(By.tagName("a"));
 //            int i = 0;
 //            for(WebElement links : allLinks){
 //                System.out.println(i++ +" : "+ links.getText());
 //            }
-        for (int i = 0;i < allLinks.size();i++) {
+        for (int i = 0; i < allLinks.size(); i++) {
             System.out.println(i + " : " + allLinks.get(i).getText());
         }
     }
@@ -69,7 +79,7 @@ public class WebTest {
     }
 
     @Test
-    public void checkSignInWithLoginAndPassTest(){
+    public void checkSignInWithLoginAndPassTest() {
         String username = "admin";
         String password = "admin";
 
@@ -81,6 +91,7 @@ public class WebTest {
 
     @Test
     public void checkSignInWithCancelEntryTest() throws InterruptedException {
+        //TODO
         open(mainPage);
         click("//a[@href=\"/basic_auth\"]");
         Thread.sleep(1000);
@@ -91,6 +102,7 @@ public class WebTest {
 
     @Test
     public void brokenImageTest() throws IOException {
+        //TODO
         open(mainPage);
         String locator = "//a[@href=\"/broken_images\"]";
         click(locator);
@@ -102,7 +114,7 @@ public class WebTest {
         http.connect();
 
 
-        if(http.getResponseCode() == 200) {
+        if (http.getResponseCode() == 200) {
             System.out.println("HTTP STATUS: " + http.getResponseMessage());
         } else {
             System.err.println("HTTP STATUS: " + http.getResponseCode());
@@ -112,7 +124,8 @@ public class WebTest {
     }
 
     @Test
-    public void bestLocatorsTest(){
+    public void bestLocatorsTest() {
+        //TODO asserts
         open(mainPage);
         click("//a[@href=\"/challenging_dom\"]");
 
@@ -124,8 +137,51 @@ public class WebTest {
     }
 
     @Test
-    public void checkBoxesTest(){
+    public void checkBoxesTest() {
+        open(mainPage);
+        click("//a[@href=\"/checkboxes\"]");
+        String checkbox1 = "(//input[@type=\"checkbox\"])[1]";
+        String checkbox2 = "(//input[@type=\"checkbox\"])[2]";
 
+        WebElement checkFirstBoxElement = driver.findElement(By.xpath(checkbox1));
+        boolean isSelectedFirstBox = checkFirstBoxElement.isSelected();
+
+        WebElement checkSecondBoxElement = driver.findElement(By.xpath(checkbox2));
+        boolean isSelectedSecondBox = checkSecondBoxElement.isSelected();
+
+        if (isSelectedFirstBox == false) {
+            click(checkbox1);
+            Assertions.assertEquals("true", checkFirstBoxElement.getAttribute("checked"));
+        }
+
+        if (isSelectedSecondBox == true) {
+            click(checkbox2);
+            Assertions.assertFalse(checkSecondBoxElement.isSelected());
+        }
+    }
+
+    @Test
+    public void contextMenuTest() {
+        open(mainPage);
+        click("//a[@href=\"/context_menu\"]");
+        String hotSpotLocator = "//div[@id=\"hot-spot\"]";
+        WebElement hotSpot = driver.findElement(By.xpath(hotSpotLocator));
+
+        actions
+                .moveToElement(hotSpot)
+                .contextClick(hotSpot)
+                .build()
+                .perform();
+        driver.switchTo().alert().accept();
+    }
+
+    @Test
+    public void digestAuthentication() throws InterruptedException {
+        open(mainPage);
+        click("//a[@href=\"/digest_auth\"]");
+
+        String username = "admin";
+        String password = "admin";
     }
 
     private void open(String http) {
@@ -138,7 +194,7 @@ public class WebTest {
     }
 
 
-    private WebElement waitAndFindElement(By locator){
+    private WebElement waitAndFindElement(By locator) {
         return webDriverWait.until(ExpectedConditions.presenceOfElementLocated(locator));
     }
 
