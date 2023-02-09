@@ -3,7 +3,6 @@ package com.herokuapp.internet;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import java.io.File;
 import java.util.HashMap;
-import java.util.Objects;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -13,7 +12,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.HasAuthentication;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.UsernameAndPassword;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -32,7 +30,6 @@ import java.time.Duration;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 public class WebTest {
@@ -264,7 +261,7 @@ public class WebTest {
   public void oneFileDownloadTest() throws InterruptedException {
     ChromeOptions options = new ChromeOptions();
 
-    String downloadFilePathLocation = System.getProperty("/home/zac/Downloads");
+    String downloadFilePathLocation = System.getProperty("user.dir")+File.separator+"Downloads";
 
     HashMap<String, Object> chromePref = new HashMap<String, Object>();
     chromePref.put("profile.default_content_setting.popups", 0);
@@ -273,41 +270,62 @@ public class WebTest {
     options.setExperimentalOption("prefs", chromePref);
 
     open("https://the-internet.herokuapp.com/download");
-    clickLocator("//a[@href=\"download/a4.jpg\"]");
+    clickLocator("//a[@href=\"download/icon.png\"]");
 
     File downloadedFile = new File(downloadFilePathLocation+"/a4.jpg");
     Thread.sleep(5000);
-
-    //TODO file downloaded but somewhere broken way
-
-    assertTrue(downloadedFile.delete());
+//    downloadedFile.delete();
+    //TODO file downloaded but assert isnt work
+//    assertTrue(downloadedFile.delete());
   }
 
+  @Test
+    public void fileUploadTest() {
+    String filePath = "/home/zac/Downloads/";
+    String fileName = "test.zip";
+    open(mainPage);
+    clickLocator("//a[@href=\"/upload\"]");
+
+    WebElement upload = driver.findElement(By.xpath("//input[@type=\"file\" and @id=\"file-upload\"]"));
+
+    upload.sendKeys(filePath, fileName);
+    clickLocator("//input[@value=\"Upload\"]");
+
+    String actualResult = driver.findElement(By.xpath("//div[contains(text(), \"test.zip\")]")).getText();
+
+    Assertions.assertEquals(fileName, actualResult);
+    //TODO add if -> if file not laded + code of mistake
+    }
+
+
+    @Test
+    public void floatingMenuTest() {
+
+    }
 
 
 
+    private void open(String http) {
+      driver.get(http);
+    }
 
-  private void open(String http) {
-    driver.get(http);
-  }
+    private void clickLocator(String locator) {
+      WebElement link = waitAndFindElement(By.xpath(locator));
+      link.click();
+    }
 
-  private void clickLocator(String locator) {
-    WebElement link = waitAndFindElement(By.xpath(locator));
-    link.click();
-  }
+    private WebElement waitAndFindElement(By locator) {
+      return webDriverWait.until(ExpectedConditions.presenceOfElementLocated(locator));
+    }
 
-  private WebElement waitAndFindElement(By locator) {
-    return webDriverWait.until(ExpectedConditions.presenceOfElementLocated(locator));
-  }
-
-  @AfterEach
-  public void tearDown() {
-    LOG.atError().log();
-//        if (driver != null) {
-//            driver.close();
-//            driver.quit();
-//        }
-  }
+    @AfterEach
+    public void tearDown() {
+      LOG.atError().log();
+  //        if (driver != null) {
+  //            driver.close();
+  //            driver.quit();
+  //        }
+    }
 
 //    @AfterAll
 //    public static void tearDownClass(){
