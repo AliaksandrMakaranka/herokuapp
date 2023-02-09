@@ -4,12 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="24d90ae1-68a7-491f-800d-bbad4a282f64" name="Changes" comment="add drag and drop with assert background color">
-      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/google-java-format.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
+    <list default="true" id="24d90ae1-68a7-491f-800d-bbad4a282f64" name="Changes" comment="testing download files">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/java/com/herokuapp/internet/WebTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/herokuapp/internet/WebTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -80,7 +76,7 @@
       <recent name="com.herokuapp.internet" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.WebTest.fileDownloadsListOfLinksTest">
+  <component name="RunManager" selected="JUnit.WebTest.oneFileDownloadTest">
     <configuration name="WebTest.downloadFilesTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="herokuapp" />
       <extension name="coverage">
@@ -92,22 +88,6 @@
       <option name="PACKAGE_NAME" value="com.herokuapp.internet" />
       <option name="MAIN_CLASS_NAME" value="com.herokuapp.internet.WebTest" />
       <option name="METHOD_NAME" value="downloadFilesTest" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="WebTest.entryAd" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="herokuapp" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.herokuapp.internet.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="com.herokuapp.internet" />
-      <option name="MAIN_CLASS_NAME" value="com.herokuapp.internet.WebTest" />
-      <option name="METHOD_NAME" value="entryAd" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -145,6 +125,22 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="WebTest.oneFileDownloadTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="herokuapp" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.herokuapp.internet.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.herokuapp.internet" />
+      <option name="MAIN_CLASS_NAME" value="com.herokuapp.internet.WebTest" />
+      <option name="METHOD_NAME" value="oneFileDownloadTest" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="WebTest.seleniumDownloadFileTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="herokuapp" />
       <extension name="coverage">
@@ -163,11 +159,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.WebTest.oneFileDownloadTest" />
         <item itemvalue="JUnit.WebTest.fileDownloadsListOfLinksTest" />
         <item itemvalue="JUnit.WebTest.seleniumDownloadFileTest" />
         <item itemvalue="JUnit.WebTest.downloadFilesTest" />
         <item itemvalue="JUnit.WebTest.fileDownloadsTest" />
-        <item itemvalue="JUnit.WebTest.entryAd" />
       </list>
     </recent_temporary>
   </component>
@@ -250,7 +246,14 @@
       <option name="project" value="LOCAL" />
       <updated>1675886089193</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="testing download files">
+      <created>1675911483556</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1675911483556</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -275,7 +278,8 @@
     <MESSAGE value="update enum to Java Class" />
     <MESSAGE value="update enum to Java Class v 1.1" />
     <MESSAGE value="add drag and drop with assert background color" />
-    <option name="LAST_COMMIT_MESSAGE" value="add drag and drop with assert background color" />
+    <MESSAGE value="testing download files" />
+    <option name="LAST_COMMIT_MESSAGE" value="testing download files" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

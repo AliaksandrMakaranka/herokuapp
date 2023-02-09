@@ -3,6 +3,7 @@ package com.herokuapp.internet;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import java.io.File;
 import java.util.HashMap;
+import java.util.Objects;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -31,6 +32,7 @@ import java.time.Duration;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 public class WebTest {
@@ -256,6 +258,29 @@ public class WebTest {
     for (WebElement links : downloadLinks) {
       System.out.println(links.getText());
     }
+  }
+
+  @Test
+  public void oneFileDownloadTest() throws InterruptedException {
+    ChromeOptions options = new ChromeOptions();
+
+    String downloadFilePathLocation = System.getProperty("/home/zac/Downloads");
+
+    HashMap<String, Object> chromePref = new HashMap<String, Object>();
+    chromePref.put("profile.default_content_setting.popups", 0);
+    chromePref.put("Downloads.default_directory", downloadFilePathLocation);
+
+    options.setExperimentalOption("prefs", chromePref);
+
+    open("https://the-internet.herokuapp.com/download");
+    clickLocator("//a[@href=\"download/a4.jpg\"]");
+
+    File downloadedFile = new File(downloadFilePathLocation+"/a4.jpg");
+    Thread.sleep(5000);
+
+    //TODO file downloaded but somewhere broken way
+
+    assertTrue(downloadedFile.delete());
   }
 
 
