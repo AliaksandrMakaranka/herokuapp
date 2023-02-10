@@ -2,6 +2,7 @@ package com.herokuapp.internet;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 import java.io.File;
+import java.net.MalformedURLException;
 import java.util.HashMap;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -11,7 +12,6 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
-import org.openqa.selenium.By.ByXPath;
 import org.openqa.selenium.HasAuthentication;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
@@ -20,6 +20,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.interactions.Action;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -445,17 +446,66 @@ public class WebTest {
 
   @Test
   public void horizontalSlideTest() throws InterruptedException {
-//    JavascriptExecutor js = (JavascriptExecutor)driver;
     open(MAIN_PAGE);
     clickLocator("//a[@href=\"/horizontal_slider\"]");
     WebElement slider = driver.findElement(By.xpath("//input[@type=\"range\"]"));
 
-    for (int i = 0; i < 6; i++) {
+    for (int i = 0; i < 9; i++) {
       slider.sendKeys(Keys.ARROW_RIGHT);
       Thread.sleep(500);
     }
   }
 
+  @Test
+  public void horizontalSlideWithActionTest() {
+    open(MAIN_PAGE);
+    clickLocator("//a[@href=\"/horizontal_slider\"]");
+    WebElement slider = driver.findElement(By.xpath("//input[@type=\"range\"]"));
+
+    actions.clickAndHold(slider);
+    actions.moveByOffset(50, 0);
+    actions.build().perform();
+  }
+
+  @Test
+  public void hoversTest() throws IOException {
+    open(MAIN_PAGE);
+    clickLocator("//a[@href=\"/hovers\"]");
+
+    WebElement user1 = driver.findElement(By.xpath("(//img[@alt=\"User Avatar\"])[1]"));
+    actions.moveToElement(user1).perform();
+
+    clickLocator("//a[@href=\"/users/1\"]");
+    statusCode("https://the-internet.herokuapp.com/users/1");
+  }
+
+  @Test
+  public void inputsUpToFlatValueTest() {
+    open(MAIN_PAGE);
+    clickLocator("//a[@href=\"/inputs\"]");
+
+    WebElement input = driver.findElement(By.xpath("//input[@type=\"number\"]"));
+    input.click();
+
+    for (int i = 0; i < 100; i++) {
+      input.sendKeys(Keys.ARROW_UP);
+    }
+  }
+
+
+  private void statusCode(String httpUrlLink) throws IOException {
+    URL url = new URL(httpUrlLink);
+    HttpURLConnection http = (HttpURLConnection) url.openConnection();
+    http.setConnectTimeout(2000);
+
+    int responseCode = http.getResponseCode();
+    String responseMessage = http.getResponseMessage();
+    String statusCodeResult = "Response code is: " + responseCode + " " + responseMessage;
+
+    http.connect();
+    System.out.println(statusCodeResult);
+    http.disconnect();
+  }
 
     private void open(String http) {
       driver.get(http);
