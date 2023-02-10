@@ -11,8 +11,10 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
+import org.openqa.selenium.By.ByXPath;
 import org.openqa.selenium.HasAuthentication;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.UsernameAndPassword;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -62,7 +64,7 @@ public class WebTest {
 
   @Test
   @DisplayName("OpenHomeAndShowNamesLinks")
-  public void mainPage() {
+  public void mainPageTest() {
     open(MAIN_PAGE);
 
     String actualTitle = driver.getTitle();
@@ -370,7 +372,6 @@ public class WebTest {
 
   @Test
   public void loginPageTestWithRightNameAndWrongPass() {
-    //TODO time to start REGEX
     String username = "tomsmith";
     String password = "WRONG_PASSWORD!";
 
@@ -428,6 +429,32 @@ public class WebTest {
     assertEquals(actualResult, expectedResult);
   }
 
+  @Test
+  public void geolocationTest() throws InterruptedException {
+    open(MAIN_PAGE);
+
+    clickLocator("//a[@href=\"/geolocation\"]");
+    clickLocator("//button[@onclick=\"getLocation()\"]");
+    Thread.sleep(1000);
+
+    String latitude = driver.findElement(By.xpath("//div[@id=\"lat-value\"]")).getText();
+    String longitude = driver.findElement(By.id("long-value")).getText();
+
+    System.out.println("your coordinate is: \n" + "latitude: " + latitude + "\nlongitude: " + longitude);
+  }
+
+  @Test
+  public void horizontalSlideTest() throws InterruptedException {
+//    JavascriptExecutor js = (JavascriptExecutor)driver;
+    open(MAIN_PAGE);
+    clickLocator("//a[@href=\"/horizontal_slider\"]");
+    WebElement slider = driver.findElement(By.xpath("//input[@type=\"range\"]"));
+
+    for (int i = 0; i < 6; i++) {
+      slider.sendKeys(Keys.ARROW_RIGHT);
+      Thread.sleep(500);
+    }
+  }
 
 
     private void open(String http) {
