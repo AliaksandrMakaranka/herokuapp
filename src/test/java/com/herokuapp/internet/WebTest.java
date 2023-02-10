@@ -12,6 +12,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.HasAuthentication;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.UsernameAndPassword;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -36,7 +37,7 @@ public class WebTest {
 
   private static final String USERNAME = "admin";
   private static final String PASSWORD = "admin";
-  private static final String mainPage = "https://the-internet.herokuapp.com/";
+  private static final String MAIN_PAGE = "https://the-internet.herokuapp.com/";
   private final static int WAIT_FOR_ELEMENT_TIMEOUT = 5;
   private WebDriver driver;
   private WebDriverWait webDriverWait;
@@ -62,7 +63,7 @@ public class WebTest {
   @Test
   @DisplayName("OpenHomeAndShowNamesLinks")
   public void mainPage() {
-    open(mainPage);
+    open(MAIN_PAGE);
 
     String actualTitle = driver.getTitle();
     String expectedTitle = "The Internet";
@@ -81,7 +82,7 @@ public class WebTest {
 
   @Test
   public void addAndRemoveElementsTest() throws InterruptedException {
-    open(mainPage);
+    open(MAIN_PAGE);
     clickLocator("//a[@href=\"/add_remove_elements/\"]");
     String locatorAddElement = "//button[@onclick=\"addElement()\"]";
     String locatorDeleteElement = "//button[@class=\"added-manually\"]";
@@ -105,7 +106,7 @@ public class WebTest {
   @Disabled
   public void checkSignInWithCancelEntryTest() throws InterruptedException {
     //TODO
-    open(mainPage);
+    open(MAIN_PAGE);
     clickLocator("//a[@href=\"/basic_auth\"]");
     Thread.sleep(1000);
 //        Alert alert = driver.switchTo().alert();
@@ -116,7 +117,7 @@ public class WebTest {
   @Test
   public void brokenImageTest() throws IOException {
     //TODO
-    open(mainPage);
+    open(MAIN_PAGE);
     String locator = "//a[@href=\"/broken_images\"]";
     clickLocator(locator);
 
@@ -138,7 +139,7 @@ public class WebTest {
   @Test
   public void bestLocatorsTest() {
     //TODO asserts
-    open(mainPage);
+    open(MAIN_PAGE);
     clickLocator("//a[@href=\"/challenging_dom\"]");
 
     clickLocator("//a[@class=\"button\"]");
@@ -150,7 +151,7 @@ public class WebTest {
 
   @Test
   public void checkBoxesTest() {
-    open(mainPage);
+    open(MAIN_PAGE);
     clickLocator("//a[@href=\"/checkboxes\"]");
     String checkbox1 = "(//input[@type=\"checkbox\"])[1]";
     String checkbox2 = "(//input[@type=\"checkbox\"])[2]";
@@ -174,7 +175,7 @@ public class WebTest {
 
   @Test
   public void contextMenuTest() {
-    open(mainPage);
+    open(MAIN_PAGE);
     clickLocator("//a[@href=\"/context_menu\"]");
     String hotSpotLocator = "//div[@id=\"hot-spot\"]";
     WebElement hotSpot = driver.findElement(By.xpath(hotSpotLocator));
@@ -224,7 +225,7 @@ public class WebTest {
 
   @Test
   public void dropDownTest() {
-    open(mainPage);
+    open(MAIN_PAGE);
     clickLocator("//a[@href=\"/dropdown\"]");
 
     String selectOption = "//option[@value=\"\" and @selected=\"selected\"]";
@@ -237,7 +238,7 @@ public class WebTest {
 
   @Test
   public void entryAd() throws InterruptedException {
-    open(mainPage);
+    open(MAIN_PAGE);
     clickLocator("//a[@href=\"/entry_ad\"]");
 
     Thread.sleep(1_000);
@@ -246,7 +247,7 @@ public class WebTest {
 
   @Test
   public void fileDownloadsListOfLinksTest() {
-    open(mainPage);
+    open(MAIN_PAGE);
     clickLocator("//a[@href=\"/download\"]");
 
     String locator = "//div/div/a[contains(@href, '.')]";//103 elements
@@ -283,25 +284,149 @@ public class WebTest {
     public void fileUploadTest() {
     String filePath = "/home/zac/Downloads/";
     String fileName = "test.zip";
-    open(mainPage);
+    open(MAIN_PAGE);
     clickLocator("//a[@href=\"/upload\"]");
 
-    WebElement upload = driver.findElement(By.xpath("//input[@type=\"file\" and @id=\"file-upload\"]"));
+    WebElement upload = driver.findElement(
+        By.xpath("//input[@type=\"file\" and @id=\"file-upload\"]"));
 
     upload.sendKeys(filePath, fileName);
     clickLocator("//input[@value=\"Upload\"]");
 
-    String actualResult = driver.findElement(By.xpath("//div[contains(text(), \"test.zip\")]")).getText();
+    String actualResult = driver.findElement(By.xpath("//div[contains(text(), \"test.zip\")]"))
+        .getText();
 
     Assertions.assertEquals(fileName, actualResult);
     //TODO add if -> if file not laded + code of mistake
     }
 
+@Test
+  public void scrollDownToEndPageTest() {
+  open(MAIN_PAGE);
+  clickLocator("//a[@href=\"/floating_menu\"]");
 
+  JavascriptExecutor js = (JavascriptExecutor) driver;
+  js.executeScript("window.scrollTo(0, document.body.scrollHeight)");
+}
     @Test
-    public void floatingMenuTest() {
+    public void scrollDownInfinityTest() {
+      open(MAIN_PAGE);
+      clickLocator("//a[@href=\"/infinite_scroll\"]");
 
+      JavascriptExecutor js = (JavascriptExecutor) driver;
+      long beforeLength = (long) js.executeScript("return document.body.scrollHeight");
+
+      while(true) {
+        js.executeScript("window.scrollTo(0,document.body.scrollHeight)");
+
+        try {
+          Thread.sleep(500);
+        } catch (InterruptedException e) {
+          e.printStackTrace();
+        }
+
+        long afterLength = (long) js.executeScript("return document.body.scrollHeight");
+        if (beforeLength == afterLength) {
+          break;
+        }
+        beforeLength = afterLength;
+      }
     }
+
+  @Test
+  public void loginPageTestWithRightNameAndPass() {
+    String username = "tomsmith";
+    String password = "SuperSecretPassword!";
+
+    open(MAIN_PAGE);
+    clickLocator("//a[@href=\"/login\"]");
+
+    WebElement usernameLocator = driver.findElement(By.id("username"));
+    WebElement passwordLocator = driver.findElement(By.id("password"));
+    WebElement loginButtonLocator = driver.findElement(
+        By.xpath("//i[@class=\"fa fa-2x fa-sign-in\"]"));
+
+
+    usernameLocator.sendKeys(username);
+    passwordLocator.sendKeys(password);
+    loginButtonLocator.click();
+
+    WebElement logoutButtonLocator = driver.findElement(By.xpath("//i[@class=\"icon-2x icon-signout\"]"));
+
+    String actualResult = driver.findElement(By.xpath("(//h4[contains(text(), \"Welcome\")])"))
+        .getText().trim();
+    String expectedResult = "Welcome to the Secure Area. When you are done click logout below.".trim();
+
+    Assertions.assertEquals(actualResult,expectedResult);
+
+    logoutButtonLocator.click();
+
+    String loggingOutExpectedResult = " You logged out of the secure area!\n×".trim();
+    String loggingOutActualResult = driver.findElement(By.xpath("//div[@class=\"flash success\"]"))
+        .getText().trim();
+
+    Assertions.assertEquals(loggingOutExpectedResult, loggingOutActualResult);
+  }
+
+  @Test
+  public void loginPageTestWithRightNameAndWrongPass() {
+    //TODO time to start REGEX
+    String username = "tomsmith";
+    String password = "WRONG_PASSWORD!";
+
+    open(MAIN_PAGE);
+    clickLocator("//a[@href=\"/login\"]");
+
+    WebElement usernameLocator = driver.findElement(By.id("username"));
+    WebElement passwordLocator = driver.findElement(By.id("password"));
+    WebElement loginButtonLocator = driver.findElement(
+        By.xpath("//i[@class=\"fa fa-2x fa-sign-in\"]"));
+
+
+    usernameLocator.sendKeys(username);
+    passwordLocator.sendKeys(password);
+    loginButtonLocator.click();
+
+    String regexFormat = "[^a-zA-Z0-9]";
+
+    String actualResult = driver.findElement(By.xpath("//div[@class=\"flash error\"]")).getText();
+    actualResult = actualResult.replaceAll(regexFormat, "");
+
+    String expectedResult = "Your password is invalid!";
+    expectedResult = expectedResult.replaceAll(regexFormat, "");
+
+    assertEquals(actualResult, expectedResult);
+  }
+
+  @Test
+  public void loginPageTestWithWrongOrEmptyNameAndRightPass() {
+    String username = "TRUEHACKER1337";
+//    String username = "";
+    String password = "SuperSecretPassword!";
+
+    open(MAIN_PAGE);
+    clickLocator("//a[@href=\"/login\"]");
+
+    WebElement usernameLocator = driver.findElement(By.id("username"));
+    WebElement passwordLocator = driver.findElement(By.id("password"));
+    WebElement loginButtonLocator = driver.findElement(
+        By.xpath("//i[@class=\"fa fa-2x fa-sign-in\"]"));
+
+
+    usernameLocator.sendKeys(username);
+    passwordLocator.sendKeys(password);
+    loginButtonLocator.click();
+
+    String regexFormat = "[^a-zA-Z0-9]";
+
+    String actualResult = driver.findElement(By.xpath("//div[@class=\"flash error\"]")).getText();
+    actualResult = actualResult.replaceAll(regexFormat, "");
+
+    String expectedResult = "Your username is invalid!";
+    expectedResult = expectedResult.replaceAll(regexFormat, "");
+
+    assertEquals(actualResult, expectedResult);
+  }
 
 
 
