@@ -2,7 +2,6 @@ package com.herokuapp.internet;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 import java.io.File;
-import java.net.MalformedURLException;
 import java.util.HashMap;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -20,7 +19,6 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.interactions.Action;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -34,6 +32,7 @@ import java.time.Duration;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
 
 
 public class WebTest {
@@ -119,24 +118,12 @@ public class WebTest {
 
   @Test
   public void brokenImageTest() throws IOException {
-    //TODO
+    //TODO for all image on page
     open(MAIN_PAGE);
     String locator = "//a[@href=\"/broken_images\"]";
     clickLocator(locator);
+    statusCode("https://the-internet.herokuapp.com/broken_images");
 
-    URL url = new URL("https://the-internet.herokuapp.com/broken_images");
-    HttpURLConnection http = (HttpURLConnection) url.openConnection();
-    http.setConnectTimeout(2000);
-
-    http.connect();
-
-    if (http.getResponseCode() == 200) {
-      System.out.println("HTTP STATUS: " + http.getResponseMessage());
-    } else {
-      System.err.println("HTTP STATUS: " + http.getResponseCode());
-    }
-
-    http.disconnect();
   }
 
   @Test
@@ -262,6 +249,7 @@ public class WebTest {
   }
 
   @Test
+  @Disabled("need actual name fail for download")
   public void oneFileDownloadTest() throws InterruptedException {
     ChromeOptions options = new ChromeOptions();
 
@@ -312,6 +300,7 @@ public class WebTest {
   js.executeScript("window.scrollTo(0, document.body.scrollHeight)");
 }
     @Test
+    @Disabled("long test")
     public void scrollDownInfinityTest() {
       open(MAIN_PAGE);
       clickLocator("//a[@href=\"/infinite_scroll\"]");
@@ -434,6 +423,8 @@ public class WebTest {
   public void geolocationTest() throws InterruptedException {
     open(MAIN_PAGE);
 
+    //TODO make after accept  to request for get coordinate
+
     clickLocator("//a[@href=\"/geolocation\"]");
     clickLocator("//button[@onclick=\"getLocation()\"]");
     Thread.sleep(1000);
@@ -450,6 +441,7 @@ public class WebTest {
     clickLocator("//a[@href=\"/horizontal_slider\"]");
     WebElement slider = driver.findElement(By.xpath("//input[@type=\"range\"]"));
 
+    //TODO autodetect length of slider! for each?
     for (int i = 0; i < 9; i++) {
       slider.sendKeys(Keys.ARROW_RIGHT);
       Thread.sleep(500);
@@ -476,6 +468,7 @@ public class WebTest {
     actions.moveToElement(user1).perform();
 
     clickLocator("//a[@href=\"/users/1\"]");
+    //todo define working page and  get status code
     statusCode("https://the-internet.herokuapp.com/users/1");
   }
 
@@ -490,6 +483,62 @@ public class WebTest {
     for (int i = 0; i < 100; i++) {
       input.sendKeys(Keys.ARROW_UP);
     }
+  }
+
+  @Test
+  public void javascriptAlertsTest() throws InterruptedException {
+    open(MAIN_PAGE);
+    clickLocator("//a[@href=\"/javascript_alerts\"]");
+
+    //TODO three methods
+
+    WebElement jsAlertButton = driver.findElement(By.xpath("//button[@onclick=\"jsAlert()\"]"));
+    WebElement jsConfirmButton = driver.findElement(By.xpath("//button[@onclick=\"jsConfirm()\"]"));
+    WebElement jsPromptButton = driver.findElement(By.xpath("//button[@onclick=\"jsPrompt()\"]"));
+
+    //alert method
+    jsAlertButton.click();
+    driver.switchTo().alert().accept();
+
+    String expectedResultAlertButton = "You successfully clicked an alert";
+    String actualResultAlertButton = driver.findElement(By.xpath("//p[@id=\"result\"]")).getText();
+    assertEquals(expectedResultAlertButton, actualResultAlertButton);
+
+
+    //confirm method
+    jsConfirmButton.click();
+    driver.switchTo().alert().accept();
+
+    String actualResultConfirmButton = driver.findElement(By.xpath("//p[@id=\"result\"]")).getText();
+    String expectedResultConfirmButtonOk = "You clicked: Ok";
+    assertEquals(expectedResultConfirmButtonOk, actualResultConfirmButton);
+
+
+    //prompt just enter
+    jsPromptButton.click();
+    driver.switchTo().alert().accept();
+
+    String actualResultPromptButton = driver.findElement(By.xpath("//p[@id=\"result\"]")).getText();
+    String expectedResultPromptButton = "You entered:";
+    assertEquals(expectedResultPromptButton,actualResultPromptButton);
+
+
+    //prompt cancel
+    jsPromptButton.click();
+    driver.switchTo().alert().dismiss();
+
+    String actualResultPromptButtonCancel = driver.findElement(By.xpath("//p[@id=\"result\"]")).getText();
+    String expectedResultPromptButtonCancel = "You entered: null";
+    assertEquals(expectedResultPromptButtonCancel,actualResultPromptButtonCancel);
+
+    //prompt some text
+    jsPromptButton.click();
+    driver.switchTo().alert().sendKeys("Access granted");
+    driver.switchTo().alert().accept();
+
+    String actualResultPromptButtonWithSomeText = driver.findElement(By.xpath("//p[@id=\"result\"]")).getText();
+    String expectedResultPromptButtonWithSomeText = "You entered: Access granted";
+    assertEquals(expectedResultPromptButtonWithSomeText,actualResultPromptButtonWithSomeText);
   }
 
 
@@ -523,10 +572,10 @@ public class WebTest {
     @AfterEach
     public void tearDown() {
       LOG.atError().log();
-  //        if (driver != null) {
-  //            driver.close();
-  //            driver.quit();
-  //        }
+          if (driver != null) {
+//              driver.close();
+//              driver.quit();
+          }
     }
 
 //    @AfterAll
