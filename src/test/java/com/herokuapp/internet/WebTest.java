@@ -32,7 +32,7 @@ import java.time.Duration;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
+import static org.junit.jupiter.api.Assertions.fail;
 
 
 public class WebTest {
@@ -542,6 +542,30 @@ public class WebTest {
   }
 
 
+  @Test
+  public void keyPressTest() {
+    open(MAIN_PAGE);
+    clickLocator("//a[@href=\"/key_presses\"]");
+
+//    clickLocator("//input[@id=\"target\"]");
+    actions.sendKeys(Keys.SPACE).build().perform();// working in any place page
+    String text = driver.findElement(By.xpath("//p[@id=\"result\"]")).getText();
+    assertEquals(text, "You entered: SPACE");
+  }
+
+
+  @Test
+  public void largeDomTest() {
+    open(MAIN_PAGE);
+    clickLocator("//a[@href=\"/large\"]");
+
+    WebElement lastLocator = driver.findElement(
+        By.xpath("(//td[@class=\"column-50\" and //tr[@class=\"row-50\"]])[50]"));
+    String text = lastLocator.getText();
+    lastLocator.click();
+
+    assertEquals(text, "50.50");
+  }
   private void statusCode(String httpUrlLink) throws IOException {
     URL url = new URL(httpUrlLink);
     HttpURLConnection http = (HttpURLConnection) url.openConnection();
