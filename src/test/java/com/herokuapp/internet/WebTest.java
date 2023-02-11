@@ -32,7 +32,7 @@ import java.time.Duration;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.openqa.selenium.support.ui.ExpectedConditions.titleIs;
 
 
 public class WebTest {
@@ -579,6 +579,35 @@ public class WebTest {
       statusCode(url);
     }
   }
+
+  @Test
+  public void newWindowTest() {
+    open(MAIN_PAGE);
+    clickLocator("//a[@href=\"/windows\"]");
+    clickLocator("(//a[@target=\"_blank\"])[1]");
+
+    String originalWindow = driver.getWindowHandle();
+    for (String windowHandle : driver.getWindowHandles()) {
+      if(!originalWindow.contentEquals(windowHandle)) {
+        driver.switchTo().window(windowHandle);
+        break;
+      }
+    }
+
+    String expectedResult = "New Window";
+    String actualResult = driver.getTitle();
+    assertEquals(expectedResult, actualResult);
+  }
+
+
+
+
+
+
+
+
+
+
 
   private void statusCode(String httpUrlLink) throws IOException {
     URL url = new URL(httpUrlLink);
