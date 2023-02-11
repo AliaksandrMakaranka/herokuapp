@@ -566,6 +566,20 @@ public class WebTest {
 
     assertEquals(text, "50.50");
   }
+  @Test
+  public void statusCodeTest() throws IOException {
+    open(MAIN_PAGE);
+    clickLocator("//a[@href=\"/status_codes\"]");
+
+    List<WebElement> links = driver.findElements(By.tagName("a"));
+
+    for (int i = 0; i < links.size(); i++) {
+      WebElement E1= links.get(i);
+      String url = E1.getAttribute("href");
+      statusCode(url);
+    }
+  }
+
   private void statusCode(String httpUrlLink) throws IOException {
     URL url = new URL(httpUrlLink);
     HttpURLConnection http = (HttpURLConnection) url.openConnection();
@@ -573,7 +587,7 @@ public class WebTest {
 
     int responseCode = http.getResponseCode();
     String responseMessage = http.getResponseMessage();
-    String statusCodeResult = "Response code is: " + responseCode + " " + responseMessage;
+    String statusCodeResult = "Response code for " + url + " is: " + responseCode + " " + responseMessage;
 
     http.connect();
     System.out.println(statusCodeResult);
