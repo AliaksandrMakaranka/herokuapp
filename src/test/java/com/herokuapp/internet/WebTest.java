@@ -267,7 +267,7 @@ public class WebTest {
     File downloadedFile = new File(downloadFilePathLocation+"/a4.jpg");
     Thread.sleep(5000);
 //    downloadedFile.delete();
-    //TODO file downloaded but assert isnt work
+    //TODO file fix delete after download and optimize code
 //    assertTrue(downloadedFile.delete());
   }
 
@@ -574,8 +574,8 @@ public class WebTest {
     List<WebElement> links = driver.findElements(By.tagName("a"));
 
     for (int i = 0; i < links.size(); i++) {
-      WebElement E1= links.get(i);
-      String url = E1.getAttribute("href");
+      WebElement element= links.get(i);
+      String url = element.getAttribute("href");
       statusCode(url);
     }
   }
@@ -599,6 +599,26 @@ public class WebTest {
     assertEquals(expectedResult, actualResult);
   }
 
+  @Test
+  public void jQueryUIMenusTest() {
+    open(MAIN_PAGE);
+    clickLocator("//a[contains(text(), \"JQuery UI Menus\")]");
+
+    WebElement buttonEnabled = driver.findElement(By.xpath("//a[@href=\"#\" and  contains(text(), \"Enabled\")]"));
+    WebElement buttonDownloads = driver.findElement(By.xpath("//a[@href=\"#\" and  contains(text(), \"Downloads\")]"));
+    WebElement buttonExcel = driver.findElement(By.xpath("//a[contains(text(), \"Excel\")]"));
+    Duration oneSec =  Duration.ofSeconds(1);
+
+    actions
+        .moveToElement(buttonEnabled)
+        .pause(oneSec)
+        .moveToElement(buttonDownloads)
+        .pause(oneSec)
+        .moveToElement(buttonExcel)
+        .click().build().perform();
+
+    //TODO for check downloaded file
+  }
 
 
 
@@ -629,6 +649,7 @@ public class WebTest {
 
     private void clickLocator(String locator) {
       WebElement link = waitAndFindElement(By.xpath(locator));
+      link.isDisplayed();
       link.click();
     }
 
