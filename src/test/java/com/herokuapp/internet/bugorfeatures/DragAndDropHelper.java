@@ -15,7 +15,7 @@ public class DragAndDropHelper {
 
     public void start(WebDriver driver) {
         driver = new ChromeDriver();
-        //TODO
+        //TODO with enum?
         if (driver.equals(OSLO)) {
             driver.findElement(By.xpath("//div[@id=\"box1\"]"));
         } else if (driver.equals(NORWAY)) {
