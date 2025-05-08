@@ -1,9 +1,23 @@
-# herokuapp
-https://the-internet.herokuapp.com/
+# HerokuApp UI Tests
 
-autotests using jUnit-5 and selenium
+Автотесты для сайта [the-internet.herokuapp.com](https://the-internet.herokuapp.com/), написанные с использованием **JUnit 5** и **Selenium WebDriver**.
 
-This is a training code, which may contain errors,
-typos, is not of course a version 
-(methods are written personally,
-some solutions are found on the Internet)
+## О проекте
+
+Этот проект создан в учебных целях для отработки навыков автоматизации UI-тестирования. Некоторые решения реализованы вручную, другие — с опорой на открытые источники. Возможны мелкие ошибки и неточности.
+
+## Технологии
+
+- Java 17
+- JUnit 5
+- Selenium 4
+- WebDriverManager
+- Maven
+
+## Запуск тестов
+
+1. Установи JDK 17+ и Maven.
+2. Склонируй репозиторий:
+   ```bash
+   git clone https://github.com/your-username/herokuapp-tests.git
+   cd herokuapp-tests
